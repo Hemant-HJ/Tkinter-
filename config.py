@@ -11,14 +11,12 @@ USERNAME = data['username']
 PASSWORD = data['password']
 HOST = data['host']
 DATABASE = data['database']
+PORT = data['port']
 STARTED = data['started']
 
 def file_write(changed_data):
-    try:
-        with open('variable.json', 'w') as file:
-            data = data.update(changed_data)
-            json.dump(data, file, indent = 2)
+    with open('variable.json', 'w') as file:
+        data = data.update(changed_data)
+        json.dump(data, file, indent = 2)
         return True
-    except:
-        print('Error while writing to the file.')
-        return False
+    return False

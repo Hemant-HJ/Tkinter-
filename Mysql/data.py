@@ -10,23 +10,24 @@ class Database():
                 host = config.HOST,
                 user = config.USERNAME,
                 password = config.PASSWORD,
+                port = config.PORT,
                 database = config.DATABASE
             )
         else:
             pass
 
-    def setup(self, username, password, host):
+    def setup(self, username, password, host, port):
         try:
-            with connect(host = host, user = username, password = password) as connection:
+            with connect(host = host, user = username, password = password, port = port) as connection:
                 
                 try:
                     with connection.cursor() as cursor:
                         for query in self.query.setup_queries:
                             print(query)
                             cursor.execute(query)
-                        cursor.commit()
-                except:
-                    print('Error While creating tables.')
+                        connection.commit()
+                except Error as e:
+                    print(f'Error While creating tables.{e}')
                     return
                 
                 config.file_write({'started': True})

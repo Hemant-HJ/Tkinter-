@@ -40,7 +40,7 @@ class Query:
         price float not null, 
         s_date timestamp unique,
         foreign key (icode) references item(icode),
-        foreign key (code) references customer(ccode)
+        foreign key (ccode) references customer(ccode)
     );
     """
     create_table_advances = """

@@ -16,14 +16,14 @@ root = Tk()
 
 if not config.STARTED:
     def connect():
-        data = mysql_data.setup(username.get(), password.get(), host.get())
+        data = mysql_data.setup(username.get, password.get(), host.get())
         if not data:
             messagebox.showerror(title = 'Configuration Error.', message = 'There was a error while connecting to the database.\nPlease check the credintials and Try again.')
         else:
             changed_data = {
-                'username': username,
-                'password': password,
-                'host': host,
+                'username': username.get(),
+                'password': password.get(),
+                'host': host.get(),
                 'started': True
             }
             data = config.file_write(changed_data)

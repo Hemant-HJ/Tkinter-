@@ -14,6 +14,11 @@ DATABASE = data['database']
 STARTED = data['started']
 
 def file_write(changed_data):
-    with open('variable.json', 'w') as file:
-        data = data.update(changed_data)
-        json.dump(data, file, indent = 2)
+    try:
+        with open('variable.json', 'w') as file:
+            data = data.update(changed_data)
+            json.dump(data, file, indent = 2)
+        return True
+    except:
+        print('Error while writing to the file.')
+        return False

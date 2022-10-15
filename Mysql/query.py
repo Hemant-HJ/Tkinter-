@@ -84,7 +84,6 @@ class Query:
     ]
 
     def table_attributes(self, table):
-        def select(self, table):
         if table == 'item':
             return ['icode', 'iname', 'icategory', 'idesc', 'mrp']
         

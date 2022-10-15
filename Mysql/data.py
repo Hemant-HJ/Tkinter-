@@ -15,13 +15,14 @@ class Database():
         else:
             pass
 
-    def setup(self):
+    def setup(self, username, password, host):
         try:
-            with connect(host = config.HOST, user = config.USERNAME, password = config.PASSWORD) as connection:
+            with connect(host = host, user = username, password = password) as connection:
                 
                 try:
                     with connection.cursor() as cursor:
                         for query in self.query.setup_queries:
+                            print(query)
                             cursor.execute(query)
                         cursor.commit()
                 except:

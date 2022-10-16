@@ -29,16 +29,9 @@ class Database():
                 except Error as e:
                     print(f'Error While creating tables.{e}')
                     return
-                
-                config.file_write({'started': True})
+
         except Error as e:
-            print(f'Connection Error. Error {e}')
-            
-            """
-            Error GUI code.
-            """
             return False
-        # When everything right.
         return True
 
     def insert(self, table, data):
@@ -60,7 +53,7 @@ class Database():
         try:
             with self.connection.cursor() as cursor:
                 cursor.execute(u_query, data)
-                cursor.commit()
+                self.connection.commit()
         except Error as e:
             print(f'Error {e}')
             """
@@ -74,7 +67,7 @@ class Database():
         try:
             with self.connection.cursor() as cursor:
                 cursor.execute(d_query, data)
-                cursor.commit()
+                self.connection.commit()
         except Error as e:
             print(f'Error {e}')
             """

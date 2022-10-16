@@ -51,4 +51,55 @@ if not config.STARTED:
     connect_button = ttk.Button(frame, text = 'Connect', command = connect).pack(fill = 'x', expand = True)
     root.mainloop()
 else:
-    print(True)
+    class MainWindow(Tk):
+        def __init__(self):
+            super().__init__()
+            self.title('Management')
+            self.geometry('200x200')
+            self.resizable(False, False)
+
+            frame = ttk.Frame().pack()
+
+            ttk.Button(frame, text = 'Insert', command = self.open_insert_window).pack(expand = True)
+            ttk.Button(frame, text = 'Update', command = self.open_update_window).pack(expand = True)
+            ttk.Button(frame, text = 'Delete', command = self.open_delete_window).pack(expand = True)
+
+        def open_insert_window(self):
+            insert_window = InsertWindow(self)
+            insert_window.grab_set()
+
+        def open_update_window(self):
+            update_window = UpdateWindow(self)
+            update_window.grab_set()
+
+        def open_delete_window(self):
+            delete_window = DeleteWindow(self)
+            delete_window.grab_set()
+
+    class InsertWindow(Toplevel):
+        def __init__(self, parent):
+            super().__init__(parent)
+
+            self.title('Insert Window.')
+            self.geometry('400x200')
+
+            insert_frame = ttk.Frame(self).pack()
+
+            ttk.Label(self, text = 'Please select a table').pack()
+
+    class UpdateWindow(Toplevel):
+        def __init__(self, parent):
+            super().__init__(parent)
+
+            self.title('Update Window.')
+            self.geometry('400x200')
+    
+    class DeleteWindow(Toplevel):
+        def __init__(self, parent):
+            super().__init__(parent)
+
+            self.title('Delete Window.')
+            self.geometry('400x200')
+    
+    mainWindow = MainWindow()
+    mainWindow.mainloop()

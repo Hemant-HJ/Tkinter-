@@ -12,11 +12,10 @@ if os.environ.get('DISPLAY','') == '':
     os.environ.__setitem__('DISPLAY', '6080')
     print('Display variable changed.')
 
-root = Tk()
-
 if not config.STARTED:
+    root = Tk()
     def connect():
-        data = mysql_data.setup(username.get, password.get(), host.get())
+        data = mysql_data.setup(username.get(), password.get(), host.get())
         if not data:
             messagebox.showerror(title = 'Configuration Error.', message = 'There was a error while connecting to the database.\nPlease check the credintials and Try again.')
         else:
@@ -51,3 +50,5 @@ if not config.STARTED:
 
     connect_button = ttk.Button(frame, text = 'Connect', command = connect).pack(fill = 'x', expand = True)
     root.mainloop()
+else:
+    print(True)

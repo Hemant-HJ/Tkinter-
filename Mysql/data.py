@@ -16,7 +16,7 @@ class Database():
         else:
             pass
 
-    def setup(self, username, password, host, port):
+    def setup(self, username, password, host, port = 3306):
         try:
             with connect(host = host, user = username, password = password, port = port) as connection:
                 
@@ -46,7 +46,7 @@ class Database():
         try:
             with self.connection.cursor() as cursor:
                 cursor.executemany(i_query, data)
-                cursor.commit()
+                self.connection.commit()
         except Error as e:
             print(f'Error {e}')
             """

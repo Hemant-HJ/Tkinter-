@@ -16,7 +16,7 @@ STARTED = data['started']
 
 def file_write(changed_data):
     with open('variable.json', 'w') as file:
-        data = data.update(changed_data)
-        json.dump(data, file, indent = 2)
+        data.update(changed_data)
+        json.dump(data, file, indent = 4)
         return True
     return False

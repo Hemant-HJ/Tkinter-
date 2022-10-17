@@ -129,7 +129,7 @@ class Query:
         
         elif table == 'advances':
             return """
-            Insert into advances (ccode, load, ad_date)
+            Insert into advances (ccode, loan, ad_date)
             values (%s, %s, sys());
             """
         
@@ -168,7 +168,7 @@ class Query:
         elif table == 'advances':
             return """
             Update advances
-            Set loan = %s
+            Set loan = loan + %s
             where ccode = %s;
             """
 

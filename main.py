@@ -76,6 +76,10 @@ else:
             delete_window = DeleteWindow(self)
             delete_window.grab_set()
 
+        def open_select_window(self):
+            select_window = SelectWindow(self)
+            select_window.grab_set()
+
     class InsertWindow(Toplevel):
         def __init__(self, parent):
             super().__init__(parent)
@@ -110,14 +114,53 @@ else:
                     messagebox.showerror(title = 'Error', message = f'{data}')
                     self.destroy()
 
-        def table_button_Inv(Self):
-            if '' in [self.item_code_var.get(), self.item_stock_var()]:
+        def table_button_Inv(self):
+            if '' in [self.item_code_var.get(), self.item_stock_var.get()]:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
             else:
                 data = mysql_data.insert(self.table_name, [self.item_code_var.get(), self.item_stock_var.get()])
                 if data == True:
-                    messagebox.showinfo(title = 'Success', message = f'Added the item stock for {self.item_code_var.get().title()}')
+                    messagebox.showinfo(title = 'Success', message = f'Added the item stock for {self.item_code_var.get()}')
+                    self.destroy()
+                else:
+                    messagebox.showerror(title = 'Error', message = f'{data}')
+                    self.destroy()
+
+        def table_button_Cust(Self):
+            if '' in [self.cust_name_var.get(), self.cust_addr_var.get(), self.cust_phon_var.get(), self.cust_mail_var.get()]:
+                messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
+                return
+            else:
+                data = mysql_data.insert(self.table_name, [self.cust_name_var.get(), self.cust_addr_var.get(), self.cust_phon_var.get(), self.cust_mail_var.get()])
+                if data == True:
+                    messagebox.showinfo(title = 'Success', message = f'Added the Customer {self.cust_name_var.get().title()}')
+                    self.destroy()
+                else:
+                    messagebox.showerror(title = 'Error', message = f'{data}')
+                    self.destroy()
+
+        def table_button_Sale(self):
+            if '' in [self.sale_item_var.get(), self.sale_cust_var.get(), self.sale_price_var.get()]:
+                messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
+                return
+            else:
+                data = mysql_data.insert(self.table_name, [self.sale_item_var.get(), self.sale_cust_var.get(), self.sale_price_var.get()])
+                if data == True:
+                    messagebox.showinfo(title = 'Success', message = f'Added Sale Entry for customer {self.sale_cust_var.get().title()}')
+                    self.destroy()
+                else:
+                    messagebox.showerror(title = 'Error', message = f'{data}')
+                    self.destroy()
+
+        def table_button_Adv(self):
+            if '' in [self.adv_cust_var.get(), self.adv_loan_var.get()]:
+                messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
+                return
+            else:
+                data = mysql_data.insert(self.table_name, [self.adv_cust_var.get(), self.adv_loan_var.get()])
+                if data == True:
+                    messagebox.showinfo(title = 'Success', message = f'Added Loan for customer with {self.adv_cust_var.get()} id.')
                     self.destroy()
                 else:
                     messagebox.showerror(title = 'Error', message = f'{data}')
@@ -172,17 +215,44 @@ else:
                 l_cust_name = ttk.Label(self.insert_frame, text = 'Customer Name').pack()
                 e_cust_name = ttk.Entry(self.insert_frame, textvariable = self.cust_name_var).pack()
 
-                l_cust_addr = ttk.Label(self.insert_frame, text = 'Item Category').pack()
-                e_cust_addr = ttk.Entry(self.insert_frame, textvariable = self.item_cate_var)
+                l_cust_addr = ttk.Label(self.insert_frame, text = 'Customer Address').pack()
+                e_cust_addr = ttk.Entry(self.insert_frame, textvariable = self.cust_addr_var).pack()
                 
-                l_cust_phon = ttk.Label(self.insert_frame, text = 'Item Description').pack()
-                e_cust_phon = ttk.Entry(self.insert_frame, textvariable = self.item_desc_var).pack()
+                l_cust_phon = ttk.Label(self.insert_frame, text = 'Customer Phone no').pack()
+                e_cust_phon = ttk.Entry(self.insert_frame, textvariable = self.cust_phon_var).pack()
 
-                l_cust_mail = ttk.Label(self.insert_frame, text = 'Item Price').pack()
-                e_cust_mail = ttk.Entry(self.insert_frame, textvariable = self.item_pric_var).pack()
+                l_cust_mail = ttk.Label(self.insert_frame, text = 'Customer Email').pack()
+                e_cust_mail = ttk.Entry(self.insert_frame, textvariable = self.cust_mail_var).pack()
 
-                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Item).pack()
+                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Cust).pack()
 
+            elif self.table_name == 'Sales':
+                self.sale_item_var = StringVar()
+                self.sale_cust_var = StringVar()
+                self.sale_price_var = StringVar()
+
+                l_sale_item = ttk.Label(self.insert_frame, text = 'Item Code').pack()
+                e_sale_item = ttk.Entry(self.insert_frame, textvariable = self.sale_item_var).pack()
+
+                l_sale_cust = ttk.Label(self.insert_frame, text = 'Customer Name').pack()
+                e_sale_cust = ttk.Entry(self.insert_frame, textvariable = self.sale_cust_var).pack()
+                
+                l_sale_price = ttk.Label(self.insert_frame, text = 'Item Price').pack()
+                e_sale_price = ttk.Entry(self.insert_frame, textvariable = self.sale_price_var).pack()
+
+                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Sale).pack()
+
+            elif self.table_name == 'Advances':
+                self.adv_cust_var = StringVar()
+                self.adv_loan_var = StringVar()
+                
+                l_adv_cust = ttk.Label(self.insert_frame, text = 'Customer Code').pack()
+                e_adv_cust = ttk.Entry(self.insert_frame, textvariable = self.adv_cust_var).pack()
+
+                l_adv_loan = ttk.Label(self.insert_frame, text = 'Loan Added').pack()
+                e_adv_loan = ttk.Entry(self.insert_frame, textvariable = self.adv_loan_var).pack()
+                
+                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Adv).pack()
 
     class UpdateWindow(Toplevel):
         def __init__(self, parent):
@@ -196,6 +266,13 @@ else:
             super().__init__(parent)
 
             self.title('Delete Window.')
+            self.geometry('400x200')
+
+    class SelectWindow(Toplevel):
+        def __init__(self, parent):
+            super().__init__(parent)
+
+            self.title('Select Window.')
             self.geometry('400x200')
     
     mainWindow = MainWindow()

@@ -60,7 +60,8 @@ class Query:
     alter_table_advances = 'Alter Table advances Engine = innodb;'
 
     setup_queries = [
-
+        drop_database, 
+        create_database,
         use_database,
         create_table_item,
         create_table_inv,
@@ -75,11 +76,11 @@ class Query:
     ]
 
     tables = [
-        'item',
-        'inventory',
-        'customer',
-        'sales',
-        'advances'
+        'Item',
+        'Inventory',
+        'Customer',
+        'Sales',
+        'Advances'
     ]
 
     def table_attributes(self, table):

@@ -40,12 +40,9 @@ class Database():
             with self.connection.cursor() as cursor:
                 cursor.executemany(i_query, data)
                 self.connection.commit()
-        except Error as e:
+        except Error as e :
             print(f'Error {e}')
-            """
-            Error GUI code.
-            """
-            return False
+            return e
         return True
 
     def update(self, table, data):

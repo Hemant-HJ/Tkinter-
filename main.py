@@ -81,11 +81,108 @@ else:
             super().__init__(parent)
 
             self.title('Insert Window.')
+            self.resizable(False, False)
             self.geometry('400x200')
 
-            insert_frame = ttk.Frame(self).pack()
+            self.insert_frame = ttk.Frame(self)
+            self.insert_frame.pack()
 
-            ttk.Label(self, text = 'Please select a table').pack()
+            ttk.Label(self.insert_frame, text = 'Please select a table').pack(fill = X, padx = 5, pady = 5)
+
+            self.table_selected = StringVar()
+
+            table = ttk.Combobox(self.insert_frame, textvariable = self.table_selected)
+            table['state'] = 'readonly'
+            table['values'] = mysql_data.query.tables
+            table.pack(fill = X, padx = 5, pady = 5)
+            table.bind('<<ComboboxSelected>>', self.table_select)
+
+        def table_button_Item(self):
+            if '' in [self.item_name_var.get(), self.item_desc_var.get(), self.item_pric_var.get()]:
+                messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
+                return
+            else:
+                data = mysql_data.insert(self.table_name, [self.item_name_var.get(), self.item_cate_var.get(), self.item_desc_var.get(), self.item_pric_var.get()])
+                if data == True:
+                    messagebox.showinfo(title = 'Success', message = f'Added the item with {self.item_name_var.get().title()}')
+                    self.destroy()
+                else:
+                    messagebox.showerror(title = 'Error', message = f'{data}')
+                    self.destroy()
+
+        def table_button_Inv(Self):
+            if '' in [self.item_code_var.get(), self.item_stock_var()]:
+                messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
+                return
+            else:
+                data = mysql_data.insert(self.table_name, [self.item_code_var.get(), self.item_stock_var.get()])
+                if data == True:
+                    messagebox.showinfo(title = 'Success', message = f'Added the item stock for {self.item_code_var.get().title()}')
+                    self.destroy()
+                else:
+                    messagebox.showerror(title = 'Error', message = f'{data}')
+                    self.destroy()
+
+        def table_select(self, event):
+            self.table_name = self.table_selected.get()
+            for widget in self.insert_frame.winfo_children():
+                widget.destroy()
+            
+            if self.table_name == 'Item':
+                self.item_name_var = StringVar()
+                self.item_cate_var = StringVar()
+                self.item_desc_var = StringVar()
+                self.item_pric_var = StringVar()
+
+                l_item_name = ttk.Label(self.insert_frame, text = 'Item Name').pack()
+                e_item_name = ttk.Entry(self.insert_frame, textvariable = self.item_name_var).pack()
+
+                l_item_cate = ttk.Label(self.insert_frame, text = 'Item Category').pack()
+                c_item_cate = ttk.Combobox(self.insert_frame, textvariable = self.item_cate_var)
+                c_item_cate['state'] = 'readonly'
+                c_item_cate['values'] = ['General', 'Stationary', 'Metal', 'Food']
+                c_item_cate.pack()
+
+                l_item_desc = ttk.Label(self.insert_frame, text = 'Item Description').pack()
+                e_item_desc = ttk.Entry(self.insert_frame, textvariable = self.item_desc_var).pack()
+
+                l_item_pric = ttk.Label(self.insert_frame, text = 'Item Price').pack()
+                e_item_pric = ttk.Entry(self.insert_frame, textvariable = self.item_pric_var).pack()
+
+                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Item).pack()
+
+            elif self.table_name == 'Inventory':
+                self.item_code_var = StringVar()
+                self.item_stock_var = StringVar()
+
+                l_item_code = ttk.Label(self.insert_frame, text = 'Item Code').pack()
+                e_item_code = ttk.Entry(self.insert_frame, textvariable = self.item_code_var).pack()
+
+                l_item_stock = ttk.Label(self.insert_frame, text = 'Item Stock').pack()
+                e_item_stock = ttk.Entry(self.insert_frame, textvariable = self.item_stock_var).pack()
+
+                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Inv).pack()
+
+            elif self.table_name == 'Customer':
+                self.cust_name_var = StringVar()
+                self.cust_addr_var = StringVar()
+                self.cust_phon_var = StringVar()
+                self.cust_mail_var = StringVar()
+
+                l_cust_name = ttk.Label(self.insert_frame, text = 'Customer Name').pack()
+                e_cust_name = ttk.Entry(self.insert_frame, textvariable = self.cust_name_var).pack()
+
+                l_cust_addr = ttk.Label(self.insert_frame, text = 'Item Category').pack()
+                e_cust_addr = ttk.Entry(self.insert_frame, textvariable = self.item_cate_var)
+                
+                l_cust_phon = ttk.Label(self.insert_frame, text = 'Item Description').pack()
+                e_cust_phon = ttk.Entry(self.insert_frame, textvariable = self.item_desc_var).pack()
+
+                l_cust_mail = ttk.Label(self.insert_frame, text = 'Item Price').pack()
+                e_cust_mail = ttk.Entry(self.insert_frame, textvariable = self.item_pric_var).pack()
+
+                confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Item).pack()
+
 
     class UpdateWindow(Toplevel):
         def __init__(self, parent):

@@ -3,7 +3,7 @@ class Query:
     #database
     drop_database = 'drop database if exists management;'
     create_database = 'Create database management;'
-    use_database = 'use s109166_ddd;'
+    use_database = 'use s109154_qew;'
 
     #tables
     create_table_item = """
@@ -60,8 +60,8 @@ class Query:
     alter_table_advances = 'Alter Table advances Engine = innodb;'
 
     setup_queries = [
-        drop_database, 
-        create_database,
+        # drop_database, 
+        # create_database,
         use_database,
         create_table_item,
         create_table_inv,

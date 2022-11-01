@@ -35,6 +35,7 @@ class Database():
         return True
 
     def insert(self, table, data):
+        print(table)
         i_query = self.query.insert(table)
         try:
             with self.connection.cursor() as cursor:
@@ -74,17 +75,20 @@ class Database():
         return True
 
     def select(self, table):
+        print(table)
         s_query = self.query.select(table)
+        print(s_query)
         try:
             with self.connection.cursor() as cursor:
                 cursor.execute(s_query)
+                print(cursor.fetchall())
                 return cursor.fetchall()
         except Error as e:
             print(f'Error {e}')
             """
             Error GUI code.
             """
-            return False
+            return e
 
     def select_where(self, table, data):
         s_query = self.query.select_where(table)

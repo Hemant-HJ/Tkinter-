@@ -6,16 +6,8 @@ class Database():
     def __init__(self):
         self.query = query.Query()
         if config.STARTED:
-            self.connection = connect(
-                host = config.HOST,
-                user = config.USERNAME,
-                password = config.PASSWORD,
-                port = config.PORT,
-                database = config.DATABASE
-            )
-        else:
-            pass
-
+            self.connection = connect(host = config.HOST, user = config.USERNAME, password = config.PASSWORD,
+                port = config.PORT, database = config.DATABASE)
     def setup(self, username, password, host, port = 3306):
         try:
             with connect(host = host, user = username, password = password, port = port) as connection:
@@ -29,7 +21,6 @@ class Database():
                 except Error as e:
                     print(f'Error While creating tables.{e}')
                     return
-
         except Error as e:
             return False
         return True
@@ -77,13 +68,3 @@ class Database():
         except Error as e:
             print(f'Error {e}')
             return e
-
-    # def select_where(self, table, data):
-    #     s_query = self.query.select_where(table)
-    #     try:
-    #         with self.connection.cursor() as cursor:
-    #             cursor.execute(d_query, data)
-    #             return cursor.fetchall()
-    #     except Error as e:
-    #         print(f'Error {e}')
-    #         return e

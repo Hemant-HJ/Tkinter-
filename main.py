@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import ttk, messagebox
 import sys
 import os
-
 from mysql.connector import Error
 from Mysql.data import Database
 import config
@@ -30,7 +29,6 @@ if not config.STARTED:
             if data:
                 messagebox.showinfo(title = 'Configuration Completed', message = 'Configuration is completed and now you can use the app.\nPlease start the application again.')
                 root.destroy()
-
 
     root.title('Configuration Window.')
     root.geometry('300x200')

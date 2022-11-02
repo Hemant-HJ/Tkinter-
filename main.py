@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import sys
 import os
 
+from mysql.connector import Error
 from Mysql.data import Database
 import config
 
@@ -63,13 +64,10 @@ else:
             l_insert = ttk.Label(frame , text = 'Insert Data').place(x = 20, y = 40)
             b_insert = ttk.Button(frame, text = 'Insert', command = self.open_insert_window).place(x = 140, y = 40)
 
-            l_update = ttk.Label(frame, text = 'Update Data').place(x = 20, y = 80)
-            b_update = ttk.Button(frame, text = 'Update', command = self.open_update_window).place(x = 140, y = 80)
+            # l_update = ttk.Label(frame, text = 'Update Data').place(x = 20, y = 80)
+            # b_update = ttk.Button(frame, text = 'Update', command = self.open_update_window).place(x = 140, y = 80)
 
-            l_delete = ttk.Label(frame, text = 'Delete Data').place(x = 20, y = 120)
-            b_delete = ttk.Button(frame, text = 'Delete', command = self.open_delete_window).place(x = 140, y = 120)
-
-            l_select = ttk.Label(frame, text = 'Selete Data').place(x = 20, y = 160)
+            l_select = ttk.Label(frame, text = 'Selete/Delete/Update').place(x = 20, y = 160)
             b_delete = ttk.Button(frame, text = 'Select', command = self.open_select_window).place(x = 140, y = 160)
 
             c_close = ttk.Button(frame, text = 'Close', command = self.destroy).place(x = 180, y = 200)
@@ -81,10 +79,6 @@ else:
         def open_update_window(self):
             update_window = UpdateWindow(self)
             update_window.grab_set()
-
-        def open_delete_window(self):
-            delete_window = DeleteWindow(self)
-            delete_window.grab_set()
 
         def open_select_window(self):
             select_window = SelectWindow(self)
@@ -115,7 +109,8 @@ else:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
             else:
-                data = mysql_data.insert(self.table_name.lower(), [self.item_name_var.get(), self.item_cate_var.get(), self.item_desc_var.get(), self.item_pric_var.get()])
+                values = [(self.item_name_var.get(), self.item_cate_var.get(), self.item_desc_var.get(), self.item_pric_var.get())]
+                data = mysql_data.insert(self.table_name.lower(), values)
                 if data == True:
                     messagebox.showinfo(title = 'Success', message = f'Added the item with {self.item_name_var.get().title()}')
                     self.destroy()
@@ -128,7 +123,7 @@ else:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
             else:
-                data = mysql_data.insert(self.table_name.lower(), [self.item_code_var.get(), self.item_stock_var.get()])
+                data = mysql_data.insert(self.table_name.lower(), [(self.item_code_var.get(), self.item_stock_var.get())])
                 if data == True:
                     messagebox.showinfo(title = 'Success', message = f'Added the item stock for {self.item_code_var.get()}')
                     self.destroy()
@@ -141,7 +136,7 @@ else:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
             else:
-                data = mysql_data.insert(self.table_name.lower(), [self.cust_name_var.get(), self.cust_addr_var.get(), self.cust_phon_var.get(), self.cust_mail_var.get()])
+                data = mysql_data.insert(self.table_name.lower(), [(self.cust_name_var.get(), self.cust_addr_var.get(), self.cust_phon_var.get(), self.cust_mail_var.get())])
                 if data == True:
                     messagebox.showinfo(title = 'Success', message = f'Added the Customer {self.cust_name_var.get().title()}')
                     self.destroy()
@@ -154,7 +149,7 @@ else:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
             else:
-                data = mysql_data.insert(self.table_name.lower(), [self.sale_item_var.get(), self.sale_cust_var.get(), self.sale_price_var.get()])
+                data = mysql_data.insert(self.table_name.lower(), [(self.sale_item_var.get(), self.sale_cust_var.get(), self.sale_price_var.get())])
                 if data == True:
                     messagebox.showinfo(title = 'Success', message = f'Added Sale Entry for customer {self.sale_cust_var.get().title()}')
                     self.destroy()
@@ -167,7 +162,7 @@ else:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
             else:
-                data = mysql_data.insert(self.table_name.lower(), [self.adv_cust_var.get(), self.adv_loan_var.get()])
+                data = mysql_data.insert(self.table_name.lower(), [(self.adv_cust_var.get(), self.adv_loan_var.get())])
                 if data == True:
                     messagebox.showinfo(title = 'Success', message = f'Added Loan for customer with {self.adv_cust_var.get()} id.')
                     self.destroy()
@@ -264,84 +259,18 @@ else:
                 confirm = ttk.Button(self.insert_frame, text = 'Confirm', command = self.table_button_Adv).pack()
 
     class UpdateWindow(Toplevel):
-        def __init__(self, parent):
+        def __init__(self, parent, tree):
+            self.tree = tree
             super().__init__(parent)
 
             self.title('Update Window.')
             self.geometry('400x200')
-    
-    class DeleteWindow(Toplevel):
-        def __init__(self, parent):
-            super().__init__(parent)
+            self.resizable(False, False)
 
-            self.title('Delete Window.')
-            self.geometry('400x200')
-            self.delete_frame = ttk.Frame(self)
-            self.delete_frame.pack()
+            self.update_frame = ttk.Frame(self)
+            self.update_frame.pack()
 
-            ttk.Label(self.delete_frame, text = 'Tables').pack()
-
-            self.table_selected = StringVar()
-            table = ttk.Combobox(self.select_frame, textvariable = self.table_selected)
-            table['state'] = 'readonly'
-            table['values'] = mysql_data.query.tables
-            table.pack()
-            table.bind('<<ComboboxSelected>>', self.table_select)
-
-        def table_select(self, event):
-            self.table_name = self.table_selected.get()
-
-            window = self.Selected_Table(self, self.table_name)
-
-        class SelectedTable(Toplevel):
-            def __init__(self, parent, table):
-                self.table = table.lower()
-                super().__init__(parent)
-
-                self.title(self.table)
-                self.selected_table_f = ttk.Frame(self)
-                self.selected_table_f.pack()
-
-                columns = mysql_data.query.table_attributes(self.table.lower())
-
-                tree = ttk.Treeview(self.selected_table_f, columns = columns, show = 'headings')
-                for column in columns:
-                    tree.heading(column, text = column.title())
-
-                data = mysql_data.select(self.table.lower())
-                if type(data) == type([]):
-                    for entry in data:
-                        tree.insert('', END, values = entry)
-                else:
-                    messagebox.showerror(title = 'Error', message = data)
-
-                tree.bind('<<TreeviewSelect>>', self.data_select)
-                self.tree = tree
-
-            def data_select(self, event):
-                if self.table == 'item':
-                    self.delete_key = 'icode'
-                elif self.table == 'inventory':
-                    self.delete_key = 'icode'
-                elif self.table == 'customer':
-                    self.delete_key = 'ccode'
-                elif self.table == 'sales':
-                    self.delete_key = 'scode'
-                elif self.table == 'advances':
-                    self.delete_key = 'ccode'
-
-                self.delete_key_id = []
-                
-                for data in self.tree.selection():
-                    record_id = self.tree.item(data)['values'][self.delete_key]
-                    self.delete_key_id.append(record_id)
-                messagebox.showwarning(title = 'Warning', message = 'You are about to delete the selected items.')
-                for id in self.delete_key_id:
-                    mysql_data.delete(self.table, id)
-
-                for data in self.tree.selection():
-                    self.tree.delete(data)
-
+            record = self.tree.selection()[0]['values']
 
     class SelectWindow(Toplevel):
         def __init__(self, parent):
@@ -385,12 +314,35 @@ else:
                     tree.heading(column, text = column.title())
 
                 data = mysql_data.select(self.table.lower())
-                if type(data) == type([]):
+                if len(data)>0:
                     for entry in data:
                         tree.insert('', END, values = entry)
+                    tree.pack()
+                    self.tree = tree
                 else:
-                    messagebox.showerror(title = 'Error', message = data)
+                    messagebox.showerror(title = 'Error', message = f'Empty Table. {data}')
 
+                b_delete = ttk.Button(self.selected_table_f, text = 'Delete', command = self.delete)
+                b_update = ttk.Button(self.selected_table_f, text = 'Update', command = self.update)
+
+            def update(self):
+                updatewindow = UpdateWindow(self, tree)
+                updatewindow.grab_set()
+
+            def delete(self):
+                self.delete_id = []
+
+                ask = messagebox.askyesno(title = 'Confirmation', message = 'Are you sure you want to delete.')
+                if not ask:
+                    return
+            
+                for data in self.tree.selection():
+                    record_id = self.tree.item(data)['values'][0]
+                    self.delete_id.append(record_id)
+                    self.tree.delete(data)
+                
+                for id in self.delete_id:
+                    mysql_data.delete(self.table.lower(), id)
     
     mainWindow = MainWindow()
     mainWindow.mainloop()

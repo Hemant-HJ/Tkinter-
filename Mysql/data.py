@@ -54,9 +54,6 @@ class Database():
                 self.connection.commit()
         except Error as e:
             print(f'Error {e}')
-            """
-            Error GUI code.
-            """
             return False
         return True
 
@@ -64,41 +61,29 @@ class Database():
         d_query = self.query.delete(table)
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute(d_query, data)
+                cursor.execute(d_query, [data])
                 self.connection.commit()
         except Error as e:
             print(f'Error {e}')
-            """
-            Error GUI code.
-            """
-            return False
+            return e
         return True
 
     def select(self, table):
-        print(table)
         s_query = self.query.select(table)
-        print(s_query)
         try:
             with self.connection.cursor() as cursor:
                 cursor.execute(s_query)
-                print(cursor.fetchall())
                 return cursor.fetchall()
         except Error as e:
             print(f'Error {e}')
-            """
-            Error GUI code.
-            """
             return e
 
-    def select_where(self, table, data):
-        s_query = self.query.select_where(table)
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute(d_query, data)
-                return cursor.fetchall()
-        except Error as e:
-            print(f'Error {e}')
-            """
-            Error GUI code.
-            """
-            return False
+    # def select_where(self, table, data):
+    #     s_query = self.query.select_where(table)
+    #     try:
+    #         with self.connection.cursor() as cursor:
+    #             cursor.execute(d_query, data)
+    #             return cursor.fetchall()
+    #     except Error as e:
+    #         print(f'Error {e}')
+    #         return e

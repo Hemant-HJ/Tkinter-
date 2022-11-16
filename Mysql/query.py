@@ -89,50 +89,50 @@ class Query:
         elif table == 'customer':
             return """
             Insert into customer (cname, address, phoneno, email, first_p)
-            values (%s, %s, %s, %s, sys());
+            values (%s, %s, %s, %s, now());
             """
         elif table == 'sales':
             return """
             Insert into sales (icode, ccode, price, s_date)
-            values (%s, %s, %s, sys());
+            values (%s, %s, %s, now());
             """
         elif table == 'advances':
             return """
             Insert into advances (ccode, loan, ad_date)
-            values (%s, %s, sys());
+            values (%s, %s, now());
             """
         else:
             return False
 
-    def update(self, table):
+    def update(self, table, clm):
         if table == 'item':
-            return """
+            return f"""
             Update item
-            Set iname = %s, icategory = %s, idesc = %s, mrp = %s
+            Set {clm} = %s
             Where icode = %s;
             """
         elif table == "inventory":
-            return """
+            return f"""
             Update inventory
-            Set stock = %s
+            Set {clm} = %s
             where icode = %s; 
             """
         elif table == 'customer':
-            return """
+            return f"""
             Update customer
-            Set cname = %s, address = %s, phoneno = %s, email = %s
+            Set {clm} = %s
             where ccode = %s;
             """
         elif table == 'sales':
-            return """
+            return f"""
             Update Sales
-            Set icode = %s, ccode = %s, price = %s
+            Set {clm} = %s
             where scode = %s;
             """
         elif table == 'advances':
-            return """
+            return f"""
             Update advances
-            Set loan = loan + %s
+            Set {clm} = loan + %s
             where ccode = %s;
             """
         else:

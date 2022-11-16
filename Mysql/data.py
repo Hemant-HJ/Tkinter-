@@ -38,14 +38,15 @@ class Database():
         return True
 
     def update(self, table, data):
-        u_query = self.query.update(table)
+        u_query = self.query.update(table, data[0])
+        data.pop(0)
         try:
             with self.connection.cursor() as cursor:
                 cursor.execute(u_query, data)
                 self.connection.commit()
         except Error as e:
             print(f'Error {e}')
-            return False
+            return e
         return True
 
     def delete(self, table, data):

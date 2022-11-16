@@ -1,8 +1,8 @@
 {
-    "username": "u109154_tXAv5V84Pj",
-    "password": "z9Usno81aYms9QWkU=mno4++",
-    "host": "51.161.33.34",
+    "username": "",
+    "password": "",
+    "host": "",
     "port": 3306,
-    "database": "s109154_qew",
-    "started": true
+    "database": "management",
+    "started": false
 }

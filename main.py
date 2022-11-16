@@ -62,11 +62,11 @@ else:
             l_insert = ttk.Label(frame , text = 'Insert Data').place(x = 20, y = 40)
             b_insert = ttk.Button(frame, text = 'Insert', command = self.open_insert_window).place(x = 180, y = 40)
 
-            # l_update = ttk.Label(frame, text = 'Update Data').place(x = 20, y = 80)
-            # b_update = ttk.Button(frame, text = 'Update', command = self.open_update_window).place(x = 140, y = 80)
+            l_update = ttk.Label(frame, text = 'Update Data').place(x = 20, y = 80)
+            b_update = ttk.Button(frame, text = 'Update', command = self.open_update_window).place(x = 180, y = 80)
 
-            l_select = ttk.Label(frame, text = 'Selete/Delete/Update').place(x = 20, y = 160)
-            b_delete = ttk.Button(frame, text = 'Select', command = self.open_select_window).place(x = 180, y = 160)
+            l_select = ttk.Label(frame, text = 'Selete/Delete').place(x = 20, y = 120)
+            b_delete = ttk.Button(frame, text = 'Select', command = self.open_select_window).place(x = 180, y = 120)
 
             c_close = ttk.Button(frame, text = 'Close', command = self.destroy).place(x = 180, y = 200)
 
@@ -129,7 +129,7 @@ else:
                     messagebox.showerror(title = 'Error', message = f'{data}')
                     self.destroy()
 
-        def table_button_Cust(Self):
+        def table_button_Cust(self):
             if '' in [self.cust_name_var.get(), self.cust_addr_var.get(), self.cust_phon_var.get(), self.cust_mail_var.get()]:
                 messagebox.showerror(title = 'Value Error', message = 'Any of the value cannot be empty.')
                 return
@@ -236,7 +236,7 @@ else:
                 l_sale_item = ttk.Label(self.insert_frame, text = 'Item Code').pack()
                 e_sale_item = ttk.Entry(self.insert_frame, textvariable = self.sale_item_var).pack()
 
-                l_sale_cust = ttk.Label(self.insert_frame, text = 'Customer Name').pack()
+                l_sale_cust = ttk.Label(self.insert_frame, text = 'Customer ID').pack()
                 e_sale_cust = ttk.Entry(self.insert_frame, textvariable = self.sale_cust_var).pack()
                 
                 l_sale_price = ttk.Label(self.insert_frame, text = 'Item Price').pack()
@@ -267,11 +267,11 @@ else:
             self.update_frame = ttk.Frame(self)
             self.update_frame.pack()
 
-            ttk.Label(self.insert_frame, text = 'Please select a table').pack(fill = X, padx = 5, pady = 5)
+            ttk.Label(self.update_frame, text = 'Please select a table').pack(fill = X, padx = 5, pady = 5)
 
             self.table_selected = StringVar()
 
-            table = ttk.Combobox(self.insert_frame, textvariable = self.table_selected)
+            table = ttk.Combobox(self.update_frame, textvariable = self.table_selected)
             table['state'] = 'readonly'
             table['values'] = mysql_data.query.tables
             table.pack(fill = X, padx = 5, pady = 5)
@@ -284,9 +284,10 @@ else:
             self.v_com = StringVar()
             self.v_pri = StringVar()
             self.v_new = StringVar()
-            table_atr = mysql_data.query.table_attributes(self.table)
+            table_atr = mysql_data.query.table_attributes(self.table.lower())
             l_pri = ttk.Label(self.update_frame, text = table_atr[0]).pack()
             e_pri = ttk.Entry(self.update_frame, textvariable = self.v_pri).pack()
+            l_com = ttk.Label(self.update_frame, text = 'Chose Column').pack()
             c_com = ttk.Combobox(self.update_frame, textvariable = self.v_com)
             c_com['state'] = 'readonly'
             table_atr.pop(0)
@@ -297,7 +298,7 @@ else:
             c_button = ttk.Button(self.update_frame, text = 'Confirm', command = self.confirm).pack()
 
         def confirm(self):
-            data = mysql_data.update(self.table, (self.v_com.get(), self.v_new.get(), self.v_pri.get()))
+            data = mysql_data.update(self.table.lower(), [self.v_com.get(), self.v_new.get(), int(self.v_pri.get())])
             if data == True:
                 messagebox.showinfo(title = 'Success', message = f'Updated Data')
                 self.destroy()
@@ -355,7 +356,7 @@ else:
                 else:
                     messagebox.showerror(title = 'Error', message = f'Empty Table. {data}')
 
-                b_delete = ttk.Button(self.selected_table_f, text = 'Delete', command = self.delete)
+                b_delete = ttk.Button(self.selected_table_f, text = 'Delete', command = self.delete).pack()
 
             def delete(self):
                 self.delete_id = []
